@@ -1,6 +1,6 @@
-const PATH = require("path");
-
-const APP_ROOT = PATH.dirname(require.main.filename);
+const path = require("path");
+const APP_ROOT = path.dirname(require.main.filename);
+const VIDEO_UPLOAD_PATH = path.resolve(APP_ROOT, "./video-uploads");
 
 const MONGODB_CONNECTION_CONF = {
   uri: "mongodb://localhost:27017/usersDb", //change this URL <mongodb://YOUR_MONGO_CONTAINER:EXPOSED_MONGO_PORT/DB_NAME> when dockerizing
@@ -42,5 +42,6 @@ module.exports = {
   corsConf: CORS_CONF,
   morganConf: MORGAN_CONF,
   serverPort: SERVER_BASE_PORT,
-  appRoot: APP_ROOT
+  appRoot: APP_ROOT,
+  videoUploadPath: VIDEO_UPLOAD_PATH
 };

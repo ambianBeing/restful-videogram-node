@@ -32,4 +32,4 @@ process.on("SIGINT", function() {
 });
 
 /*load the models*/
-require("./../models/video.js");
+require("./../models/user.js");

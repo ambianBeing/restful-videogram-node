@@ -14,6 +14,9 @@ const videoSchema = new Schema({
   name: { type: String, required: true },
   creatorName: { type: String, required: true },
   uploadedAt: { type: Date, required: true },
+  fileLocation: { type: String, required: true },
+  fileAbsPath: { type: String, required: true },
+  encodedName: { type: String, required: true },
   comments: [commentSchema]
 });
 

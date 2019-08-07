@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VIDEOGRAM</title>
+    <style type="text/css">
+      * {
+        font: 600 16px system-ui, sans-serif;
+      }
+      form {
+        width: 500px;
+        margin: 50px auto;
+        text-align: center;
+      }
+      form > legend {
+        font-size: 36px;
+        color: #3c5b6d;
+        padding: 150px 0 20px;
+      }
+      form > input[type="file"],
+      form > input[type="file"]:before {
+        display: block;
+        width: 396px;
+        height: 50px;
+        margin: 0 auto;
+        line-height: 50px;
+        text-align: center;
+        cursor: pointer;
+      }
+      form > input[type="file"] {
+        position: relative;
+      }
+      form > input[type="file"]:before {
+        content: "Choose a video";
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        color: #3c5b6d;
+        font-size: 18px;
+        background: #fff;
+        border-radius: 3px;
+        border: 2px solid #3c5b6d;
+      }
+      form > button[type="submit"] {
+        border-radius: 3px;
+        font-size: 18px;
+        display: block;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        background: #2a76cd;
+        width: 396px;
+        margin: 20px auto;
+        padding: 15px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <form
+      action="/user/upload-video"
+      enctype="multipart/form-data"
+      method="POST"
+    >
+      <legend>Upload Video</legend>
+      <input type="file" name="userVideo" />
+      <button type="submit" class="btn btn-primary">Upload</button>
+    </form>
+    <form action="/auth/logout" method="GET">
+      <button
+        style="color: #fff;background-color: #d9534f; border-color: #d43f3a;"
+        type="submit"
+        class="btn btn-default"
+      >
+        LOGOUT
+      </button>
+    </form>
+  </body>
+</html>
