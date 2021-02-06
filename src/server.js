@@ -17,15 +17,13 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(morgan(morganConf.customFacade, { stream: logger.stream }));
 app.use(cors(corsConf));
-
-/*Only use compression if response payloads are large*/
 app.use(compression());
 
 /*setup cookies config and session*/
 app.use(
   cookieSession({
     maxAge: 24 * 60 * 60 * 1000,
-    keys: [cookieKey]
+    keys: [cookieKey],
   })
 );
 
@@ -47,11 +45,8 @@ app.get("/", (req, res) => {
 //   res.sendFile(__dirname + "/index.html");
 // });
 
-/*After routes establish db connection*/
 require("./db/mongodb-connect.js");
-
-/*establish the server on a listening port*/
-app.listen(serverPort, function() {
+app.listen(serverPort, function () {
   logger.info(`Enviroment::${process.env.NODE_ENV}`);
   logger.info(`restful-videogram-node listening on port::${serverPort}`);
 });

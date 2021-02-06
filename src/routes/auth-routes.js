@@ -1,12 +1,10 @@
 const router = require("express").Router();
 const passport = require("passport");
 
-/*only setting up authentication with google for now (/auth/provider)*/
-
 router.get(
   "/google",
   passport.authenticate("google", {
-    scope: ["profile"]
+    scope: ["profile"],
   })
 );
 

@@ -1,22 +1,18 @@
-# restful-videogram-node
+# videogram-crud
 
-Restful APIs in node &amp; express with OAuth2 and persistence in mongodb
-**The RESTful APIs will be listening on port 5000**
+Restful APIs in node &amp; express with OAuth2 and persistence in mongodb to handle crud operations on videos data set
 
-## Getting Started
+### Getting Started
 
-It covers ["GET", "POST", "DELETE", "PATCH"] requests for the scenario of resource CRUD operations **VIDEOS**.
-Following instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
+It covers ["GET", "POST", "DELETE", "PATCH"] requests for the scenario of resource CRUD operations.
 
-**-NOTE:** Javascript ES6 syntax has been use throughout.
+**The APIs will be listening on port 5000**
 
 ### Prerequisites
 
-1.Nodejs with NPM and mongoDb on 27017 should be installed on the target machine to get the app up & running.
-
-2.Get [Google OAuth2](https://console.developers.google.com/apis/dashboard) credentials from google api console. Used as primary strategy for passport for user login.
-
-3.In a terminal/cmd do the following basic checks
+- Nodejs with `npm` and `mongodb` on `27017` should be installed on the target machine.
+- Get [Google OAuth2](https://console.developers.google.com/apis/dashboard) credentials from google api console. Which is used strategy for login.
+- In a terminal/cmd do the following basic checks.
 
 ```
 mongo --version
@@ -24,37 +20,35 @@ node -v
 npm -v
 ```
 
-### Installing
+### Installations
 
-A step by step to get a development env running.
-
-## Project dependencies
+open terminal/cmd in project root and do
 
 ```
-1. open terminal/cmd in project root
-2. npm install
+npm install
 ```
 
--Google credential configs are in **config/auth-keys.js** with dummy values. Update that w.r.t yours.
+- Google credential configs are in **`config/auth-keys.js`** with dummy values. Update that w.r.t yours.
 
--User session details are maintained using passport and cookie-session in tandem with express routes. A random `String` as cookie key is required, place it in **auth-keys.js** file.
+- User session details are maintained using passport and cookie-session in tandem with express routes.
+
+- A random `String` as cookie key is required, place it in **`auth-keys.js`** file.
 
 ```
-  google: {
-    clientID:<CLIENT_ID>,
-    clientSecret: <CLIENT_SECRET>
+google: {
+  clientID:<CLIENT_ID>,
+  clientSecret: <CLIENT_SECRET>
   },
-  session: {
-    cookieKey: <COOKIE-KEY_STRING> //any random string
+session: {
+  cookieKey: <COOKIE-KEY_STRING>
   }
-};
 ```
 
--Mongodb connection URI settings and server main port: Are located at **config/base-config.js**
+- Mongodb connection URI settings and server main port: Are located at **`config/base-config.js`** . Change the uri to `<mongodb://YOUR_MONGO_CONTAINER:EXPOSED_MONGO_PORT/DB_NAME>` when running container
 
 ```
 const MONGODB_CONNECTION_CONF = {
-  uri: "mongodb://<HOST>:<PORT>/<DB_NAME>", //change this URL <mongodb://YOUR_MONGO_CONTAINER:EXPOSED_MONGO_PORT/DB_NAME> when dockerizing
+  uri: "mongodb://<HOST>:<PORT>/<DB_NAME>",
   params: {
     useNewUrlParser: true,
     useFindAndModify: false,
@@ -69,46 +63,41 @@ const MONGODB_CONNECTION_CONF = {
 const SERVER_BASE_PORT = <PORT_YOU_WISH>;
 ```
 
-## Running the tests
+### Running the tests
 
 ```
 POSTMAN/CURL
 ```
 
-### Seeding the database
-
-```
-
-```
-
-## Running the app
+### Running the app
 
 ```
 npm run dev
-
 npm run prod
 ```
 
-## File upload mechanism
+### File upload mechanism
 
 - disk storage for multer component is used here and uploaded files go into **src/video-uploads/**
 - Hence this directory needs to be present at relevant path for upload to work
 - Files are firt uploaded via multer then preocessed via **ffmpeg** to crop and replaced in the same directory.
 - Processed files are renamed with combinations("encd" + uniqueId + timeStamp) to maintain uniqueness.
 
-## Api Interface
+### Api Interface
 
 - The api interfaces are divided into two parts **auth-routes : <HOST>/auth/provider** and **user-routes : <HOST>/user/api**
 - To access any of the user apis one must login or register first time using **<HOST>/auth/google** which is going to ask google credentials.
-- Example: go to http://localhost:5000/auth/google --> fill credentials --> redirect to home --> test user APIs http://localhost:5000/upload-video/
+- Example: go to http://localhost:5000/auth/google >> fill credentials >> redirect to home >> test user APIs http://localhost:5000/upload-video/
 
 ### User routes
 
-#### System user can upload a video
+#### **System user can upload a video**
 
 - Method: `POST`
-- URL path: `user/upload-video`
-- Request body:
+- URI: `user/upload-video`
+- Request
+
+  Body:
 
   ```
   <form
@@ -124,20 +113,23 @@ npm run prod
 
 - Response:
 
-  Header: `HTTP 200`
+  `HTTP 200`
+
   Body:
 
   ```
   {
-      isError: false,
-      errMsg: null,
-      payload: "success"
-    };
+  isError: false,
+  errMsg: null,
+  payload: "success"
+  }
+
   ```
 
   or
 
-  Header: `HTTP <HTTP_CODE>`
+  `HTTP <ERROR_CODE>`
+
   Body:
 
   ```
@@ -151,29 +143,23 @@ npm run prod
 - Requirements:
 
   - User must be logged in or first time used must be register using auth routes **locahost:5000/auth/google/**.
-  - Upload a file via form having name attribute as <userVideo> mandatory.
+  - Upload a file via form having name attribute as `userVideo` mandatory.
 
-#### Get any video file by ID
+#### **Get any video file by ID**
 
 - Method: `GET`
-- URL path: `/get-video?id=xyz`
-- Request body:
-
-  ```
-
-  ```
+- URI: `/get-video?id=<VIDEO_ID>`
 
 - Response:
-  Header: `HTTP 200`
-  Body:
 
-  ```
-  Will download the requested file in the browser
-  ```
+  `HTTP 200`
+
+  File download
 
   or
 
-  Header: `HTTP <HTTP_CODE>`
+  `HTTP <ERROR_CODE>`
+
   Body:
 
   ```
@@ -184,23 +170,24 @@ npm run prod
     };
   ```
 
-- Info:
+- If download is not required and simple JSON of file info can be sent from the respective method in service file **`services/user-service.js`**.
 
-  - If download is not required and simple JSON of file info can be sent from the respective method in service file **services/user-service.js**.
-
-#### Delete video and comments
+#### **Delete video and comments**
 
 - Method: `DELETE`
-- Url path: `/delete-video`
+- URI: `/delete-video`
 - Request:
-  Body:
+
+  Body
 
   ```
   {id:<ID_OF_REQUESTED_VIDEO>}
   ```
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -213,7 +200,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -223,19 +212,15 @@ npm run prod
     };
   ```
 
-#### Get all vidoes uploaded to the system
+#### **Get all vidoes uploaded to the system**
 
 - Method: `GET`
-- Url path: `/get-video-list?page=x&limit=y`
-- Request:
-  Body:
-
-  ```
-
-  ```
+- URI: `/get-video-list?page=x&limit=y`
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -262,7 +247,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -272,23 +259,17 @@ npm run prod
     };
   ```
 
-  - Info:
+  - page and limit are query params for pagination.
 
-  - Page and limit are query params in the URL for pagination.
-
-#### Get all vidoes uploaded to the system by a user
+#### **Get all vidoes uploaded to the system by a user**
 
 - Method: `GET`
-- Url path: `/get-user-videos?id=xyz&page=x&limit=y`
-- Request:
-  Body:
-
-  ```
-
-  ```
+- URI: `/get-user-videos?id=xyz&page=x&limit=y`
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -315,7 +296,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -325,15 +308,14 @@ npm run prod
     };
   ```
 
-  - Info:
+  - id is `userId` and page and limit are query params.
 
-  - id is userId and Page,limit are query params in the URL for pagination.
-
-#### User can comment on any video
+#### **User can comment on any video**
 
 - Method: `PATCH`
-- Url path: `/comment-on-video/:id`
+- URI: `/comment-on-video/:id`
 - Request:
+
   Body:
 
   ```
@@ -344,7 +326,9 @@ npm run prod
   ```
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -357,7 +341,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -367,23 +353,17 @@ npm run prod
     };
   ```
 
-  - Info:
+  - id is `videoId` as path param and content of comment is body param.
 
-  - id is video id in URL and content of comment is body params.
-
-#### User can get list of comments on a video
+#### **User can get list of comments on a video**
 
 - Method: `GET`
-- Url path: `/get-video-comments?id=xyz&page=x&limit=y`
-- Request:
-  Body:
-
-  ```
-
-  ```
+- URI: `/get-video-comments?id=xyz&page=x&limit=y`
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -408,7 +388,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -418,15 +400,12 @@ npm run prod
     };
   ```
 
-  - Info:
-
-  - valid videoId and commentId should be passed in request body.
-
-#### User can delete own comments
+#### **User can delete own comments**
 
 - Method: `DELETE`
-- Url path: `/delete-comments`
+- URI: `/delete-comments`
 - Request:
+
   Body:
 
   ```
@@ -438,7 +417,9 @@ npm run prod
   ```
 
 - Response:
-  Header: `HTTP 200`
+
+  `HTTP 200`
+
   Body:
 
   ```
@@ -451,7 +432,9 @@ npm run prod
 
   or
 
-  Header: `HTTP <HTTP_CODE>` Body:
+  `HTTP <ERROR_CODE>`
+
+  Body:
 
   ```
   {
@@ -461,26 +444,15 @@ npm run prod
     };
   ```
 
-  - Info:
-
-  - valid videoId and commentId should be passed in request body.
+  - valid `videoId` and `commentId` should be passed in request body.
 
 ## Built With
 
 - [Nodejs with express](https://nodejs.org/en/download/) - The framework used for backend apis
 - [NPM](https://www.npmjs.com/get-npm) - Dependency Management
-- [Mongodb with mongoose ODM](https://docs.mongodb.com/manual/installation/) - As data persistence
-- [Passport](http://www.passportjs.org/) -For Oauth2 integration with google strategy
-- [Mocha-Chai](https://www.chaijs.com/) - For writing test cases
-
-## Contributing
-
-## Versioning
+- [Mongodb with mongoose ODM](https://docs.mongodb.com/manual/installation/) - persistence
+- [Passport](http://www.passportjs.org/) -Oauth2 integration with google strategy
 
 ## Authors
 
 - **ambianBeing**
-
-## License
-
-## Acknowledgments
